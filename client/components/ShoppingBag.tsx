@@ -1,70 +1,36 @@
 import { useState } from 'react';
-import { Trash2, Minus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  size: string;
-  image: string;
-  selected: boolean;
-}
-
-const initialItems: CartItem[] = [
-  {
-    id: 1,
-    name: "Aurelia Powder Blue Dress",
-    price: 58000,
-    size: "XL",
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/032603e20af96bbb481148c6fa6954caf5c7619a?width=338",
-    selected: true
-  },
-  {
-    id: 2,
-    name: "Aurelia Powder Blue Dress",
-    price: 58000,
-    size: "XL", 
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/032603e20af96bbb481148c6fa6954caf5c7619a?width=338",
-    selected: false
-  },
-  {
-    id: 3,
-    name: "Aurelia Powder Blue Dress",
-    price: 58000,
-    size: "XL",
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/032603e20af96bbb481148c6fa6954caf5c7619a?width=338",
-    selected: false
-  }
-];
+import { useCart } from '@lib/context/CartContext';
 
 export default function ShoppingBag() {
-  const [items, setItems] = useState<CartItem[]>(initialItems);
-  const [selectAll, setSelectAll] = useState(false);
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+  const handleSelectItem = (id: number) => {
+    setSelectedItems(prev => 
+      prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
+    );
+  };
 
   const handleSelectAll = () => {
-    const newSelectAll = !selectAll;
-    setSelectAll(newSelectAll);
-    setItems(items.map(item => ({ ...item, selected: newSelectAll })));
-  };
-
-  const handleItemSelect = (id: number) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, selected: !item.selected } : item
-    ));
-  };
-
-  const handleRemoveItem = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
+    if (selectedItems.length === cartItems.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(cartItems.map(item => item.id));
+    }
   };
 
   const handleRemoveSelected = () => {
-    setItems(items.filter(item => !item.selected));
-    setSelectAll(false);
+    selectedItems.forEach(id => removeFromCart(id));
+    setSelectedItems([]);
   };
 
-  const selectedItems = items.filter(item => item.selected);
-  const subtotal = selectedItems.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = cartItems.reduce((sum, item) => {
+    if (selectedItems.includes(item.id)) {
+      return sum + item.price * item.quantity;
+    }
+    return sum;
+  }, 0);
 
   return (
     <section className="bg-brand-cream py-16 lg:py-20">
@@ -83,7 +49,7 @@ export default function ShoppingBag() {
               onClick={handleSelectAll}
               className="w-6 h-6 border border-black bg-gray-100/20 flex items-center justify-center hover:bg-brand-gold/10 transition-colors"
             >
-              {selectAll && (
+              {selectedItems.length === cartItems.length && cartItems.length > 0 && (
                 <div className="w-4 h-4 bg-gray-800 flex items-center justify-center">
                   <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="text-white">
                     <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -106,17 +72,17 @@ export default function ShoppingBag() {
 
         {/* Cart Items */}
         <div className="space-y-6 mb-16">
-          {items.map((item) => (
+          {cartItems.map((item) => (
             <div
               key={item.id}
               className="border border-brand-gold bg-transparent p-6 flex items-center space-x-6"
             >
               {/* Checkbox */}
               <button
-                onClick={() => handleItemSelect(item.id)}
+                onClick={() => handleSelectItem(item.id)}
                 className="w-6 h-6 border border-brand-gold bg-gray-100/20 flex items-center justify-center hover:bg-brand-gold/10 transition-colors flex-shrink-0"
               >
-                {item.selected && (
+                {selectedItems.includes(item.id) && (
                   <div className="w-6 h-6 bg-gray-800 flex items-center justify-center">
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="text-white">
                       <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -147,9 +113,16 @@ export default function ShoppingBag() {
                 </p>
               </div>
 
+              {/* Quantity Selector */}
+              <div className="flex items-center space-x-2">
+                <button onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="px-2 py-1 border border-black">-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-2 py-1 border border-black">+</button>
+              </div>
+
               {/* Delete Button */}
               <button
-                onClick={() => handleRemoveItem(item.id)}
+                onClick={() => removeFromCart(item.id)}
                 className="w-6 h-6 flex-shrink-0 hover:text-red-500 transition-colors"
               >
                 <img 

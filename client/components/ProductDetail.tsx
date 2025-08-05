@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useCart } from '@lib/context/CartContext';
 
 const thumbnailImages = [
   "https://api.builder.io/api/v1/image/assets/TEMP/3cee7a9f4a84b5378c60f4266a7278cbcdddc8fd?width=148",
@@ -11,9 +12,25 @@ const thumbnailImages = [
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
+const product = {
+  id: 1,
+  name: "Camilla Ivory Hand Embellished Net Fishcut Lehenga Set with Halter Neckline",
+  price: 130000,
+  image: "https://api.builder.io/api/v1/image/assets/TEMP/3cee7a9f4a84b5378c60f4266a7278cbcdddc8fd?width=148",
+};
+
 export default function ProductDetail() {
+  const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
+
+  const handleAddToCart = () => {
+    if (selectedSize) {
+      addToCart({ ...product, size: selectedSize });
+    } else {
+      alert('Please select a size');
+    }
+  };
 
   return (
     <section className="bg-brand-cream py-16 lg:py-20">
@@ -57,7 +74,7 @@ export default function ProductDetail() {
           <div className="space-y-6">
             {/* Product Title */}
             <h1 className="font-inter text-2xl lg:text-[24px] font-medium leading-[42px] tracking-[2px] text-gray-800">
-              Camilla Ivory Hand Embellished Net Fishcut Lehenga Set with Halter Neckline
+              {product.name}
             </h1>
 
             {/* Product Description */}
@@ -78,7 +95,7 @@ export default function ProductDetail() {
             {/* Price */}
             <div className="flex items-baseline space-x-2">
               <span className="font-inter text-2xl tracking-[2px] text-gray-800">
-                INR 130,000
+                INR {product.price.toLocaleString()}
               </span>
               <span className="font-inter text-sm tracking-[2px] text-gray-800 opacity-79">
                 (Inclusive of all taxes)
@@ -114,7 +131,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Add to Bag Button */}
-            <button className="w-full lg:w-[168px] h-12 bg-brand-gold rounded-lg font-inter text-white font-bold tracking-[2px] hover:bg-brand-gold/90 transition-colors">
+            <button onClick={handleAddToCart} className="w-full lg:w-[168px] h-12 bg-brand-gold rounded-lg font-inter text-white font-bold tracking-[2px] hover:bg-brand-gold/90 transition-colors">
               ADD TO BAG
             </button>
 

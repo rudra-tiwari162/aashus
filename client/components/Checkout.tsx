@@ -1,6 +1,14 @@
 import { useState } from 'react';
+import { useCart } from '@lib/context/CartContext';
+
+const coupons: Record<string, number> = {
+  aashu10: 0.1,
+  aashu20: 0.2,
+  aashu30: 0.3,
+};
 
 export default function Checkout() {
+  const { cartItems } = useCart();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -16,6 +24,9 @@ export default function Checkout() {
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -50,6 +61,22 @@ export default function Checkout() {
     // Handle payment processing
     console.log('Processing payment...', formData);
   };
+
+  const handleApplyCoupon = () => {
+    if (coupons[couponCode]) {
+      setDiscount(coupons[couponCode]);
+      setCouponError('');
+    } else {
+      setDiscount(0);
+      setCouponError('Invalid coupon code');
+    }
+  };
+
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const deliveryCost = 0;
+  const promotion = subtotal * discount;
+  const orderTotal = subtotal + deliveryCost - promotion;
 
   return (
     <section className="bg-brand-cream py-16 lg:py-20">
@@ -303,12 +330,23 @@ export default function Checkout() {
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-brand-cream border border-brand-gold p-6 lg:p-8 space-y-6">
-              {/* Payment Method Button */}
-              <button className="w-full bg-brand-gold/30 border border-brand-gold p-4 text-center">
-                <span className="font-inter text-xl lg:text-2xl tracking-[2px] text-black opacity-73">
-                  Use this payment method
-                </span>
-              </button>
+              {/* Coupon Code */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  placeholder="COUPON CODE"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  className="w-full p-4 bg-transparent border border-brand-gold placeholder:text-black placeholder:opacity-45 font-inter text-xl tracking-[2px] outline-none"
+                />
+                <button
+                  onClick={handleApplyCoupon}
+                  className="bg-brand-gold text-brand-cream font-inter font-bold text-sm tracking-[2px] px-6 py-4 rounded-lg hover:bg-brand-gold/90 transition-colors"
+                >
+                  APPLY
+                </button>
+              </div>
+              {couponError && <p className="text-red-500 text-xs italic">{couponError}</p>}
 
               {/* Divider */}
               <div className="w-full h-px bg-black opacity-14"></div>
@@ -320,7 +358,7 @@ export default function Checkout() {
                     Items:
                   </span>
                   <span className="font-inter text-xl lg:text-2xl tracking-[2px] text-black opacity-73">
-                    ---
+                    {totalItems}
                   </span>
                 </div>
 
@@ -329,7 +367,7 @@ export default function Checkout() {
                     Delivery:
                   </span>
                   <span className="font-inter text-xl lg:text-2xl tracking-[2px] text-black opacity-73">
-                    ---
+                    {deliveryCost > 0 ? `INR ${deliveryCost.toLocaleString()}/-` : 'Free'}
                   </span>
                 </div>
 
@@ -338,7 +376,7 @@ export default function Checkout() {
                     Total:
                   </span>
                   <span className="font-inter text-xl lg:text-2xl tracking-[2px] text-black opacity-73">
-                    ---
+                    INR {subtotal.toLocaleString()}/-
                   </span>
                 </div>
 
@@ -347,7 +385,7 @@ export default function Checkout() {
                     Promotion Applied:
                   </span>
                   <span className="font-inter text-xl lg:text-2xl tracking-[2px] text-black opacity-73">
-                    ---
+                    {promotion > 0 ? `- INR ${promotion.toLocaleString()}/-` : '---'}
                   </span>
                 </div>
 
@@ -363,7 +401,7 @@ export default function Checkout() {
                       className="w-7 h-7"
                     />
                     <span className="font-inter text-2xl lg:text-[28px] font-medium tracking-[2px] text-black">
-                      58,000/-
+                      {orderTotal.toLocaleString()}/-
                     </span>
                   </div>
                 </div>

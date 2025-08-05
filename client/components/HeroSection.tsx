@@ -6,21 +6,27 @@ export default function HeroSection() {
   const bannerImages = [
     {
       id: 1,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/17ec5d73618a1a4c8b4385ee9eed7ef13ac77273?width=2880",
+      image: "/images/banner1.jpg",
       title: "THE WORLD COLLECTION",
       subtitle: "Weaving timeless Tales within our Ethereal Threads"
     },
     {
       id: 2,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/17ec5d73618a1a4c8b4385ee9eed7ef13ac77273?width=2880",
+      image: "/images/banner2.jpg",
       title: "ETHEREAL ELEGANCE",
       subtitle: "Crafted with Love, Worn with Pride"
     },
     {
       id: 3,
-      image: "https://api.builder.io/api/v1/image/assets/TEMP/17ec5d73618a1a4c8b4385ee9eed7ef13ac77273?width=2880",
+      image: "/images/banner3.jpg",
       title: "TIMELESS TRADITIONS",
       subtitle: "Where Heritage Meets Contemporary Style"
+    },
+    {
+      id: 4,
+      image: "/images/banner4.jpg",
+      title: "THE WORLD COLLECTION",
+      subtitle: "Weaving timeless Tales within our Ethereal Threads"
     }
   ];
 
