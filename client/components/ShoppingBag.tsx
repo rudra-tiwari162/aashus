@@ -4,9 +4,9 @@ import { useCart } from '@lib/context/CartContext';
 
 export default function ShoppingBag() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const handleSelectItem = (id: number) => {
+  const handleSelectItem = (id: string) => {
     setSelectedItems(prev => 
       prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
     );

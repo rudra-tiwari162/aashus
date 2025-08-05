@@ -13,7 +13,7 @@ const thumbnailImages = [
 const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
 const product = {
-  id: 1,
+  productId: 1,
   name: "Camilla Ivory Hand Embellished Net Fishcut Lehenga Set with Halter Neckline",
   price: 130000,
   image: "https://api.builder.io/api/v1/image/assets/TEMP/3cee7a9f4a84b5378c60f4266a7278cbcdddc8fd?width=148",

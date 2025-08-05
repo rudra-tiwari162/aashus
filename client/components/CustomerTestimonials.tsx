@@ -45,7 +45,7 @@ export default function CustomerTestimonials() {
       skipSnaps: false,
       dragFree: false,
     },
-    // [Autoplay({ delay: 4000, stopOnInteraction: false })]
+    [Autoplay({ delay: 4000, stopOnInteraction: false })]
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);

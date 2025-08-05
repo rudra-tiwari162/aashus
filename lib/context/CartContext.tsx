@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface CartItem {
-  id: number;
+  id: string; // Changed to string to allow for unique IDs
+  productId: number;
   name: string;
   price: number;
   size: string;
@@ -11,9 +12,9 @@ interface CartItem {
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  addToCart: (item: Omit<CartItem, 'quantity' | 'id'>) => void;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -36,24 +37,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+  const addToCart = (item: Omit<CartItem, 'quantity' | 'id'>) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(i => i.id === item.id && i.size === item.size);
+      const existingItem = prevItems.find(i => i.productId === item.productId && i.size === item.size);
       if (existingItem) {
         return prevItems.map(i =>
-          i.id === item.id && i.size === item.size ? { ...i, quantity: i.quantity + 1 } : i
+          i.productId === item.productId && i.size === item.size ? { ...i, quantity: i.quantity + 1 } : i
         );
       } else {
-        return [...prevItems, { ...item, quantity: 1 }];
+        return [...prevItems, { ...item, id: `${item.productId}-${item.size}-${Date.now()}`, quantity: 1 }];
       }
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     setCartItems(prevItems =>
       prevItems.map(item => (item.id === id ? { ...item, quantity } : item))
     );
