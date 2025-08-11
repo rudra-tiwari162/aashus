@@ -1,7 +1,7 @@
 
 # Aashus
 
-Aashus is a modern, full-stack e-commerce web application built with the MERN stack (MongoDB, Express.js, React, Node.js) and TypeScript. It's designed to provide a seamless and enjoyable shopping experience for users, with a focus on performance, scalability, and user-friendliness.
+Aashus is a modern, full-stack e-commerce web application built with the ReactJS & TypeScript for the froentend and FastAPI & PostgreSQL in the backend. It's designed to provide a seamless and enjoyable shopping experience for users, with a focus on performance, scalability, and user-friendliness.
 
 ## About The Project
 
@@ -28,11 +28,9 @@ This project is a fusion-starter template that has been customized to create an 
     *   React Router
     *   TanStack Query
 *   **Backend:**
-    *   Express.js
-    *   Node.js
-    *   TypeScript
-*   **Deployment:**
-    *   Netlify
+    *   FastAPI
+    *   PostgreSQL
+
 
 ## Getting Started
 
