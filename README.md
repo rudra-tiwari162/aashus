@@ -107,6 +107,3 @@ Runs the TypeScript compiler to check for type errors.
 └── shared
 ```
 
-## Deployment
-
-This project is configured for deployment on Netlify. The `netlify.toml` file contains the necessary build settings and redirects for the serverless functions.
