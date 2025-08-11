@@ -1,7 +1,7 @@
 
 # Aashus
 
-Aashus is a modern, full-stack e-commerce web application built with the ReactJS & TypeScript for the froentend and FastAPI & PostgreSQL in the backend. It's designed to provide a seamless and enjoyable shopping experience for users, with a focus on performance, scalability, and user-friendliness.
+Aashus is a modern, full-stack e-commerce web application built with the ReactJS & TypeScript for the frontend and FastAPI & PostgreSQL in the backend. It's designed to provide a seamless and enjoyable shopping experience for users, with a focus on performance, scalability, and user-friendliness.
 
 ## About The Project
 
